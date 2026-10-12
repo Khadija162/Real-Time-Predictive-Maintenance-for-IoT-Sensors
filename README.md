@@ -19,6 +19,20 @@ Batch CSV --> Bronze Parquet --> Silver validated --> Gold machine-health Parque
                                            Cloud roadmap: ADLS Gen2
 ```
 
+
+## Open-source benchmark dataset (included)
+
+The repository now includes the full **AI4I 2020 Predictive Maintenance** dataset at [data/public/ai4i2020.csv](data/public/ai4i2020.csv): **10,000 synthetic industrial-maintenance records**, with a permissive attribution-required **CC BY 4.0** data license. Publisher: UCI Machine Learning Repository; DOI: https://doi.org/10.24432/C5HS5C. See [data provenance and license](data/public/README.md).
+
+This source dataset differs from the generated telemetry used in the original demo. To train an AI4I-specific model (without target-label leakage):
+
+```powershell
+.\.venv\Scripts\python.exe -m maintenance.train_ai4i --csv data/public/ai4i2020.csv
+.\.venv\Scripts\python.exe -m pytest tests/test_ai4i_data.py -q
+```
+
+This writes `models/ai4i_failure_model.joblib`. **Do not reuse the existing `/predict` endpoint with this model**: its schema expects vibration and pressure, whereas AI4I provides torque and tool wear. Its original demo model and the AI4I benchmark must remain separate until an AI4I API schema is implemented.
+
 ## Local Windows quick start
 
 Prerequisites: Python 3.11/3.12, optional Docker Desktop. Clone the repo:
